@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CHECKLIST - WaraswJS Workshop #8</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    <style type="text/css">
+      main {
+        min-width: 320px;
+        max-width: 768px;
+        margin: 0 auto;
+        box-sizing: border-box;
+        padding: 2em;
+        border: 1px solid #DDD;
+        border-radius: 1em;
+      }
+
+      fieldset legend {
+        font-weight: bold;
+        font-size: 110%;
+      }
+
+      pre.codename {
+        display: inline;
+        background-color: #EEE;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <form id="checklist" class="pure-form">
+        <fieldset>
+          <legend>Platforma</legend>
+          <label class="pure-checkbox"><input type="checkbox" id="wifi" /> Wi-Fi</label>
+          <label class="pure-checkbox"><input type="checkbox" id="nodejs" /> Node.js 7.x / 8.x</label>
+        </fieldset>
+        <fieldset>
+          <legend>Survival</legend>
+          <label class="pure-checkbox"><input type="checkbox" id="dinner" /> Wybór dania na obiad: <a href="http://bit.ly/warsawjs-workshop-8-lunch">http://bit.ly/warsawjs-workshop-8-lunch</a></label>
+        </fieldset>
+        <fieldset>
+          <legend>Konta</legend>
+          <label class="pure-checkbox"><input type="checkbox" id="repo" /> Repozytorium GitHub: <pre class="codename">warsawjs-workshop-8-social-network</pre></label>
+          <label class="pure-checkbox"><input type="checkbox" id="firebase" /> Konto Firebase</label>
+        </fieldset>
+        <fieldset>
+          <legend>Przygotowanie katalogu</legend>
+          <label class="pure-checkbox"><input type="checkbox" id="npm-init" /> <pre class="codename">npm init</pre></label>
+          <label class="pure-checkbox"><input type="checkbox" id="git-init" /> <pre class="codename">git init</pre></label>
+          <label class="pure-checkbox"><input type="checkbox" id="git-remote" /> <pre class="codename">git remote add origin ...</pre></label>
+        </fieldset>
+        <fieldset>
+          <legend>Postęp projektu</legend>
+          <label class="pure-checkbox"><input type="checkbox" id="app-user-register" /> <pre class="codename">User#register</pre></label>
+          <label class="pure-checkbox"><input type="checkbox" id="app-user-post" /> <pre class="codename">User#postMessage</pre></label>
+          <label class="pure-checkbox"><input type="checkbox" id="app-user-tests" /> <pre class="codename">describe('User')</pre> (testy)</label>
+          <label class="pure-checkbox"><input type="checkbox" id="app-repository" /> Repozytorium + zależności</label>
+          <label class="pure-checkbox"><input type="checkbox" id="app-service-container" /> Kontener usług</label>
+          <label class="pure-checkbox"><input type="checkbox" id="app-register-service" /> Usługa <pre class="codename">registerUser</pre></label>
+          <label class="pure-checkbox"><input type="checkbox" id="app-event-logger" /> Logger eventów</label>
+          <label class="pure-checkbox"><input type="checkbox" /> TBD...</label>
+        </fieldset>
+        <fieldset>
+          <legend>Końcówka</legend>
+          <label class="pure-checkbox"><input type="checkbox" id="end-survey" /> Ankieta na koniec: <a href="http://bit.ly/warsawjs-workshop-8-ankieta">http://bit.ly/warsawjs-workshop-8-ankieta</a></label>
+        </fieldset>
+      </form>
+    </main>
+    <script type="text/javascript">
+      const form = document.getElementById('checklist');
+
+      const storageKey = 'pl.rkaw.warsawjs-workshop-8.checklist.inputs';
+      function persistValues() {
+        const inputValues = {};
+        form.querySelectorAll('input').forEach(function(input) {
+          const inputID = input.getAttribute('id');
+          if (!inputID) {
+            return;
+          }
+          const valueToPersist = (input.type === 'checkbox') ? input.checked : input.value;
+          inputValues[inputID] = valueToPersist;
+        });
+        window.localStorage.setItem(storageKey, JSON.stringify(inputValues));
+      }
+      // Load all values:
+      const storedValues = JSON.parse(window.localStorage.getItem(storageKey) || '{}');
+      form.querySelectorAll('input').forEach(function restoreInput(input) {
+        const inputID = input.getAttribute('id');
+        if (!inputID) {
+          return;
+        }
+        if (input.type === 'checkbox') {
+          input.checked = Boolean(storedValues[inputID]);
+        } else if (storedValues[inputID]) {
+          input.value = storedValues[inputID];
+        }
+        // Set up a listener:
+        input.addEventListener('change', persistValues);
+        input.addEventListener('input', persistValues);
+      });
+    </script>
+  </body>
+</html>
